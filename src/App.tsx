@@ -10,7 +10,6 @@ function App() {
           <h1 className="text-center text-lg fonto-bold text-white uppercase">
             Contador de Calorías
           </h1>
-          
         </div>
       </header>
       <section className="bg-lime-500 py-20 px-5">
