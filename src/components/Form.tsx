@@ -52,7 +52,7 @@ export default function Form(){
                         value={formData.category}
                         //maneja los cambios en el select
                         onChange={handleChange} 
-                        >
+                    >
                             {categories.map((category) => (
                                 <option
                                     key={category.id}   //Se asigna una key unica por cada option
