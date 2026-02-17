@@ -1,12 +1,14 @@
-import { useState, type ChangeEvent, type Dispatch, type FormEvent } from "react"
+import { useState, type ChangeEvent, type Dispatch, type FormEvent, useEffect } from "react"
 import { v4 as uuidv4 } from "uuid"
 import { categories } from "../data/categories"
 import { type FormData } from "../types"
-import type { FormDataActions } from "../reducers/formData-reducer"
+import type { FormDataActions, FormDataState } from "../reducers/formData-reducer"
 
 type FormProps = {
     dispatch: Dispatch<FormDataActions>
+    state: FormDataState
 }
+
 const initialState: FormData = {
     id: uuidv4(),
     category: 1,
@@ -14,9 +16,17 @@ const initialState: FormData = {
     calories: 0
 }
 
-export default function Form({dispatch} : FormProps){
-    //  Estado para manejar los datos del formulario (uno solo)
+export default function Form({dispatch, state} : FormProps){
+    // Estado para manejar los datos que se muestran en el formulario (uno solo)
     const [formData, setFormData] = useState<FormData>(initialState)
+
+    useEffect(() => {
+        if(state.activeId){
+            const filteredArray = state.activities.filter(stateActivity => stateActivity.id === state.activeId);
+            const selectedActivity = filteredArray[0]; //[0] extrae ese primer (y único) elemento del array
+            setFormData(selectedActivity)
+        }
+    }, [state.activeId])
 
     const handleChange = (e: ChangeEvent<HTMLSelectElement> | ChangeEvent<HTMLInputElement>) => {
         // Verifica si el campo que se está modificando es de tipo número o no.
