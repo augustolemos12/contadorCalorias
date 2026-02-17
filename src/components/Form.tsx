@@ -1,8 +1,13 @@
 import { categories } from "../data/categories"
-import { useState, type ChangeEvent, type FormEvent } from "react"
+import { useState, type ChangeEvent, type Dispatch, type FormEvent } from "react"
 import { type FormData } from "../types"
+import type { FormDataActions } from "../reducers/formData-reducer"
 
-export default function Form(){
+type FormProps = {
+    dispatch: Dispatch<FormDataActions>
+}
+
+export default function Form({dispatch} : FormProps){
     //  Estado para manejar los datos del formulario (uno solo)
     const [formData, setFormData] = useState<FormData>({
         category: 1,
@@ -19,8 +24,8 @@ export default function Form(){
             // Spread operator para mantener los valores anteriores
             ...formData,
             // [e.target.id] es el id del elemento HTML que disparó el evento, en este caso id toma los valores "category", "activity" o "calories".
-            // [e.target.value] es el valor actual del elemento HTML. Por defecto, los valores de los elementos HTML son cadenas de texto asi que si el campo es de tipo número, se convierte a número.
-            [e.target.id]: isNumberField ? Number(e.target.value) : e.target.value
+            // [e.target.value] es el valor actual del elemento HTML. Por defecto, los valores de los elementos HTML son cadenas de texto asi que si el campo es de tipo texto, se convierte a número.
+            [e.target.id]: isNumberField ? +e.target.value : e.target.value
         })
     }
 
@@ -33,7 +38,7 @@ export default function Form(){
 
     const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
         e.preventDefault(); // Evita que la página se recargue al enviar el formulario
-        console.log(formData)
+        dispatch({type: "save-activity", payload:{newActivity: formData }})
     }
 
     return(
@@ -96,7 +101,6 @@ export default function Form(){
                     // Cambia el texto del botón según la categoría seleccionada
                     value={formData.category === 1 ? 'Agregar comida' : 'Agregar ejercicio'}
                     disabled={!isFormValid()} // Deshabilita el botón si el formulario no es válido. Disabled es un atributo booleano, por lo que si isFormValid() devuelve false, se convierte en true y el botón se deshabilita.
-
                 />
             </form>
         </>
