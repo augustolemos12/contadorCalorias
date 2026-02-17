@@ -6,14 +6,15 @@ import type { FormDataActions } from "../reducers/formData-reducer"
 type FormProps = {
     dispatch: Dispatch<FormDataActions>
 }
+const initialState = {
+    category: 1,
+    activity: '',
+    calories: 0
+}
 
 export default function Form({dispatch} : FormProps){
     //  Estado para manejar los datos del formulario (uno solo)
-    const [formData, setFormData] = useState<FormData>({
-        category: 1,
-        activity: '',
-        calories: 0
-    })
+    const [formData, setFormData] = useState<FormData>(initialState)
 
     const handleChange = (e: ChangeEvent<HTMLSelectElement> | ChangeEvent<HTMLInputElement>) => {
         // Verifica si el campo que se está modificando es de tipo número o no.
@@ -39,6 +40,7 @@ export default function Form({dispatch} : FormProps){
     const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
         e.preventDefault(); // Evita que la página se recargue al enviar el formulario
         dispatch({type: "save-activity", payload:{newActivity: formData }})
+        setFormData(initialState) // Resetea el formulario a su estado inicial después de enviar los datos
     }
 
     return(
