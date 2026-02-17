@@ -31,6 +31,5 @@ export const formDataReducer = (
             activities: [...state.activities, action.payload.newActivity]
         }
     }
-
-    
+    return state;
 }

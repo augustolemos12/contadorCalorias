@@ -1,12 +1,14 @@
-import { categories } from "../data/categories"
 import { useState, type ChangeEvent, type Dispatch, type FormEvent } from "react"
+import { v4 as uuidv4 } from "uuid"
+import { categories } from "../data/categories"
 import { type FormData } from "../types"
 import type { FormDataActions } from "../reducers/formData-reducer"
 
 type FormProps = {
     dispatch: Dispatch<FormDataActions>
 }
-const initialState = {
+const initialState: FormData = {
+    id: uuidv4(),
     category: 1,
     activity: '',
     calories: 0
@@ -40,7 +42,11 @@ export default function Form({dispatch} : FormProps){
     const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
         e.preventDefault(); // Evita que la página se recargue al enviar el formulario
         dispatch({type: "save-activity", payload:{newActivity: formData }})
-        setFormData(initialState) // Resetea el formulario a su estado inicial después de enviar los datos
+        setFormData({
+            ...initialState,
+            id: uuidv4(),
+        //Cada vez que se envíe un formulario, el nuevo se reinicia al estado inicial pero se le genera un nuevo id.
+        })
     }
 
     return(
