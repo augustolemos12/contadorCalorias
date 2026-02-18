@@ -4,7 +4,8 @@ import { type FormData } from "../types"
 export type FormDataActions =
     { type: 'save-activity', payload: { newActivity: FormData }} |
     { type: 'set-activity', payload : { id: FormData['id'] }}    |
-    { type: 'delete-activity', payload: { id: FormData['id'] }}
+    { type: 'delete-activity', payload: { id: FormData['id'] }}  |
+    { type: 'restart-app'}
 
 //Tipamos la forma del estado global.
 export type FormDataState = {
@@ -12,10 +13,14 @@ export type FormDataState = {
     activities: FormData[],
     activeId: FormData['id'] //ID de la actividad seleccionada para EDITAR.
 }
+const localStorageActivities = () : FormData[] => {
+    const activities = localStorage.getItem('activities')
+    return activities ? JSON.parse(activities) : []
+}
 
-//Estado inicial. Cuando arranca no hay actividades. El array está vacío.
+//Estado inicial.
 export const initialState: FormDataState = {
-    activities: [],
+    activities: localStorageActivities(),
     activeId: ''
 }
 
@@ -54,6 +59,13 @@ export const formDataReducer = (
         return{
             ...state,
             activities: state.activities.filter(activity => activity.id !== action.payload.id)
+        }
+    }
+
+    if(action.type === 'restart-app'){
+        return{
+            activities: [],
+            activeId: ''
         }
     }
 
